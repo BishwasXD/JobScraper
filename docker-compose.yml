@@ -1,0 +1,9 @@
+services:
+  scraper:
+    build:
+      context: .
+    volumes:
+      - .:/src
+    working_dir: /src
+    command: python src/spiders/scraper.py
+
