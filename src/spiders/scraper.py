@@ -2,10 +2,22 @@ import asyncio
 from playwright.async_api import async_playwright
 import random
 
+from db.queries import add_to_wwr
+
 
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
 
 JOB_LISTINGS_WE_WORK_REMOTELY = []
+
+# dummy_data = [
+#     {
+#         'description': ['test'],
+#         'title': 'test',
+#         'company': 'test'
+#     }
+# ]
+#
+# add_to_wwr(dummy_data)
 
 
 async def main():
@@ -58,6 +70,8 @@ async def main():
                 print('TIMEOUT OCCURED GRACEFULLY BREAKING')
                 break
         print('FINISHED SCRAPING, DETAILS : ', JOB_LISTINGS_WE_WORK_REMOTELY)
+        print('TOTAL JOBS SCRAPPED', len(JOB_LISTINGS_WE_WORK_REMOTELY))
+        add_to_wwr(JOB_LISTINGS_WE_WORK_REMOTELY)
 
     finally:
         await browser.close()
