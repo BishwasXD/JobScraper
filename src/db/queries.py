@@ -35,6 +35,39 @@ TABLE FOR WE WORK REMOTELY
 #     print('TABLE CREATED SUCCESSFULLY!!!')
 
 
+"""
+TABLE FOR REMOTE OK
+"""
+
+# if connection:
+#     cursor.execute(
+#             """
+#             CREATE TABLE REMOTEOK(
+#             id SERIAL PRIMARY KEY,
+#             company VARCHAR(100),
+#             position VARCHAR(200),
+#             location VARCHAR(100),
+#             max_salary INT,
+#             min_salary INT
+#
+#             )
+#             """
+#             )
+#     cursor.execute(
+#             """
+#             CREATE TABLE TAGS(
+#             tag VARCHAR(100),
+#             tag_id INT,
+#             FOREIGN KEY (tag_id) REFERENCES REMOTEOK(id) ON DELETE CASCADE
+#             )
+#             """
+#             )
+#     connection.commit()
+#     connection.close()
+#     cursor.close()
+#     print("TABLE CREATED FOR REMOTE OK")
+
+
 def add_to_wwr(job_lists):
     """
     format of job_lists: [
@@ -67,4 +100,33 @@ def add_to_wwr(job_lists):
                 (description_id, des)
             )
 
+    connection.commit()
+
+
+def add_to_remoteok(job_lists):
+    for job in job_lists:
+        location = job.get('location')
+        company = job.get('company')
+        position = job.get('position')
+        max_salary = job.get('salary_max')
+        min_salary = job.get('salary_min')
+        tags = job.get('tags', [])
+        cursor.execute(
+            """
+                INSERT INTO  REMOTEOK (company, position,location, max_salary, min_salary) VALUES (%s, %s, %s, %s, %s)
+                RETURNING id;
+                """,
+            (company, position, location, max_salary, min_salary)
+        )
+        tag_id = cursor.fetchone()[0]
+        for tag in tags:
+            cursor.execute(
+                """
+                    INSERT INTO TAGS(tag_id, tag) VALUES (%s, %s)
+                    """,
+
+                (tag_id, tag)
+            )
+
+    print('DATA ADDED SUCCESSFULLY!!!')
     connection.commit()
