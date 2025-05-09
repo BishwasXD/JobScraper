@@ -1,11 +1,10 @@
-from re import L
 import requests
 import asyncio
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
 import random
 
-# from db.queries import add_to_wwr, add_to_remoteok
+from db.queries import add_to_wwr, add_to_remoteok, add_to_remote_co
 
 
 JOB_LISTINGS_WE_WORK_REMOTELY = []
@@ -181,7 +180,7 @@ async def scrape_remote_co(page, p, browser):
             tag = await tags.nth(j).inner_text()
             TAGS.append(tag)
         job_information = {
-            "tags": tags,
+            "tags": TAGS,
             "role": title,
             "company": company,
             "apply_link": f"https://remote.co{apply_link}",
@@ -189,6 +188,7 @@ async def scrape_remote_co(page, p, browser):
         JOB_LISTINGS_REMOTE_CO.append(job_information)
     print("JOB LISTINGS FOR REMOTE.CO: ", JOB_LISTINGS_REMOTE_CO)
     print("TOTAL JOBS SCRAPED: ", len(JOB_LISTINGS_REMOTE_CO))
+    add_to_remote_co(JOB_LISTINGS_REMOTE_CO)
 
 
 async def main():
